@@ -22,7 +22,7 @@ From the Arch ISO, `install.sh` will:
 
 ```bash
 pacman -Sy git
-git clone https://github.com/<your-username>/JerbeArch.git
+git clone https://github.com/Jerbe-Dev/JerbeArch.git
 cd JerbeArch
 chmod +x install.sh
 ./install.sh
