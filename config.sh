@@ -8,7 +8,7 @@ LOCALE="en_US.UTF-8"
 
 EFI_SIZE="512M"
 SWAP_SIZE="4G"
-ZRAM_SIZE="4G"
+ZRAM_SIZE="4096"
 ZRAM_ALGO="zstd"
 
 # Extra packages installed at pacstrap time (space separated)
