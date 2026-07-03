@@ -10,4 +10,5 @@ cat > /etc/systemd/zram-generator.conf <<EOF
 [zram0]
 zram-size = ${ZRAM_SIZE}
 compression-algorithm = ${ZRAM_ALGO}
+swap-priority = 100
 EOF
