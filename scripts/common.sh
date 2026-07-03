@@ -14,7 +14,10 @@ check_uefi() {
 
 check_internet() {
     log "Checking internet connectivity..."
-    if ! ping -c 2 archlinux.org &>/dev/null; then
+    # Ping Google's DNS IP directly (8.8.8.8) instead of a domain name so this
+    # doesn't hang on DNS resolution. -c 3 = exactly 3 attempts, -W 3 = max
+    # 3s wait per reply, so this always self-terminates in ~9s worst case.
+    if ! ping -c 3 -W 3 8.8.8.8 &>/dev/null; then
         die "No internet connection. Connect first (see scripts/wifi.sh) and re-run."
     fi
     log "Internet OK."
