@@ -19,7 +19,7 @@ ZRAM_SIZE=4096
 ZRAM_ALGO="zstd"
 
 # Extra packages installed at pacstrap time (space separated)
-EXTRA_PACKAGES="base-devel pipewire pipewire-pulse pipewire-alsa wireplumber bluez bluez-utils"
+EXTRA_PACKAGES="base-devel pipewire pipewire-pulse pipewire-alsa wireplumber bluez bluez-utils sof-firmware"
 
 # Disk is chosen interactively at runtime (see scripts/partition.sh),
 # but you can hardcode a default here if you always install on the same box.
