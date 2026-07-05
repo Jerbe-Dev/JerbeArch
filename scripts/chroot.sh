@@ -35,6 +35,12 @@ sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
 echo "[chroot] Enabling NetworkManager..."
 systemctl enable NetworkManager
 
+echo "[chroot] Enabling Bluetooth..."
+systemctl enable bluetooth
+
+echo "[chroot] Enabling Bluetooth..."
+systemctl enable bluetooth
+
 echo "[chroot] Running GRUB module..."
 bash "$SCRIPT_DIR/grub.sh"
 
