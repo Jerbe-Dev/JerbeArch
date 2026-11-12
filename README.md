@@ -16,7 +16,8 @@ From the Arch ISO, `install.sh` will:
 7. Generate `fstab`
 8. Chroot in and configure: timezone, locale, hostname, root + user
    passwords, sudo, NetworkManager, GRUB, zram
-9. Unmount and optionally reboot
+9. Install GRUB both as a normal UEFI entry and at the fallback path `EFI/BOOT/BOOTX64.EFI`
+10. Unmount and optionally reboot
 
 ## Usage
 
@@ -87,3 +88,12 @@ JerbeArch/
 This is a personal setup script. Read it before you run it, especially if
 you fork it for your own hardware — partition sizes, package lists, and
 locale/timezone are tuned for one person's laptop, not yours.
+
+## UEFI boot recovery protection
+
+JerbeArch installs GRUB in two places:
+
+- The normal `GRUB` UEFI boot entry
+- The standard removable-media fallback path `EFI/BOOT/BOOTX64.EFI`
+
+The fallback path can let compatible UEFI firmware boot Arch even if a CMOS/BIOS reset erases the saved `GRUB` NVRAM entry. It does not prevent the firmware clock/settings from resetting, repair a failing RTC/CMOS battery, or help if firmware is switched to Legacy/CSM mode. Keep firmware boot mode set to UEFI. If the laptop repeatedly loses its clock/settings after battery drain, have the RTC/CMOS battery and its connection checked.
