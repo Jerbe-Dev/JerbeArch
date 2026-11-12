@@ -1,9 +1,8 @@
 # JerbeArch
 
-A modular, scriptable Arch Linux installer. UEFI + GRUB + ext4 + zram, one
-disk, no desktop environment — a minimal base you can build on.
+A minimal, scriptable Arch Linux base installer for the Nocturne desktop setup. UEFI + GRUB + ext4 + swap + zram, one disk, no desktop environment or desktop applications.
 
-## What it does
+## What it installs
 
 From the Arch ISO, `install.sh` will:
 
@@ -12,12 +11,33 @@ From the Arch ISO, `install.sh` will:
 3. Let you pick a disk and **require typing `YES`** before wiping it
 4. Partition: EFI / swap / ext4 root
 5. Format and mount
-6. `pacstrap` the base system + your extra packages
+6. Install only the base system and essential boot/network tools
 7. Generate `fstab`
-8. Chroot in and configure: timezone, locale, hostname, root + user
-   passwords, sudo, NetworkManager, GRUB, zram
+8. Configure timezone, locale, hostname, root + user passwords, sudo, and NetworkManager
 9. Install GRUB both as a normal UEFI entry and at the fallback path `EFI/BOOT/BOOTX64.EFI`
-10. Unmount and optionally reboot
+10. Configure zram
+11. Unmount and optionally reboot
+
+## Package split
+
+JerbeArch deliberately keeps the installed system plain.
+
+**JerbeArch installs:**
+- `base`, `linux`, `linux-firmware`
+- `nano`
+- `networkmanager`
+- `sudo`
+- `grub`, `efibootmgr`
+- `zram-generator`
+
+**Nocturne installs later:**
+- Niri, Noctalia, and desktop/session components
+- Audio stack and hardware audio firmware/configuration
+- Bluetooth packages and services
+- Fish/Zsh, Starship/Powerlevel10k, and terminal setup
+- Development tools, AUR helpers, applications, themes, and plugins
+
+This avoids installing desktop packages twice. NetworkManager is kept in the base so the installed system can connect to the internet before Nocturne is installed.
 
 ## Usage
 
@@ -29,8 +49,7 @@ chmod +x install.sh
 ./install.sh
 ```
 
-Answer the prompts (disk, WiFi if needed, passwords). Everything else comes
-from `config.sh`.
+Answer the prompts (disk, WiFi if needed, passwords). Defaults come from `config.sh`.
 
 ## Configuration
 
@@ -42,52 +61,45 @@ USERNAME="jerbe"
 TIMEZONE="Asia/Manila"
 LOCALE="en_US.UTF-8"
 
-EFI_SIZE="512M"
-SWAP_SIZE="4G"
-ZRAM_SIZE="4G"
+EFI_SIZE_MIB=512
+SWAP_SIZE_MIB=4096
+ZRAM_SIZE=4096
 ZRAM_ALGO="zstd"
 
-EXTRA_PACKAGES="base-devel"
+EXTRA_PACKAGES=""
 DISK=""   # leave empty to be prompted; set e.g. "/dev/sda" to skip the prompt
 ```
+
+The default extra package list is intentionally empty. Add packages only if you specifically want them in the base install.
 
 ## Repository structure
 
 ```text
 JerbeArch/
-├── install.sh          # Main entry point
-├── config.sh            # Your settings
+├── install.sh
+├── config.sh
 ├── scripts/
-│   ├── common.sh         # Shared helpers (log/warn/die, UEFI + internet checks)
-│   ├── wifi.sh            # Optional iwctl WiFi connection
-│   ├── partition.sh       # Disk selection, confirmation, partitioning
-│   ├── format.sh           # mkfs + mount
-│   ├── pacstrap.sh          # Base install + fstab
-│   ├── chroot.sh             # Runs inside arch-chroot: timezone/locale/users/etc
-│   ├── grub.sh                 # GRUB install (called from chroot.sh)
-│   ├── zram.sh                  # zram-generator config (called from chroot.sh)
-│   └── cleanup.sh               # Unmount + reboot prompt
+│   ├── common.sh
+│   ├── wifi.sh
+│   ├── partition.sh
+│   ├── format.sh
+│   ├── pacstrap.sh
+│   ├── chroot.sh
+│   ├── grub.sh
+│   ├── zram.sh
+│   └── cleanup.sh
 ├── files/
-│   ├── hosts              # /etc/hosts template
-│   └── locale.conf         # /etc/locale.conf template
+│   ├── hosts
+│   └── locale.conf
 ├── README.md
 └── LICENSE
 ```
 
 ## Safety notes
 
-- The script **erases the selected disk**. Double-check `DISK` / your
-  selection at the prompt before typing `YES`.
-- Passwords are asked for interactively (not stored in the repo) and passed
-  into the chroot as environment variables, unset immediately after use.
-- `set -euo pipefail` is used throughout — any failed command stops the
-  install rather than continuing in a broken state.
-
-## Disclaimer
-
-This is a personal setup script. Read it before you run it, especially if
-you fork it for your own hardware — partition sizes, package lists, and
-locale/timezone are tuned for one person's laptop, not yours.
+- The script **erases the selected disk**. Double-check `DISK` / your selection at the prompt before typing `YES`.
+- Passwords are asked for interactively (not stored in the repo) and passed into the chroot as environment variables, unset immediately after use.
+- `set -euo pipefail` is used throughout — any failed command stops the install rather than continuing in a broken state.
 
 ## UEFI boot recovery protection
 
