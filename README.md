@@ -15,6 +15,7 @@ From the Arch ISO, `install.sh` will:
 7. Generate `fstab`
 8. Configure timezone, locale, hostname, root + user passwords, sudo, and NetworkManager
 9. Install GRUB both as a normal UEFI entry and at the fallback path `EFI/BOOT/BOOTX64.EFI`
+   - On ECS CP43IGL hardware, preserve the SSP2 setting and enable the ES8336 inverted-headphone-jack quirk (`snd_soc_sof_es8336.quirk=66`).
 10. Configure zram
 11. Unmount and optionally reboot
 
