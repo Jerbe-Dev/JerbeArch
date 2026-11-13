@@ -20,7 +20,7 @@ if grep -qi 'CP43IGL' /sys/class/dmi/id/product_name /sys/class/dmi/id/board_nam
 
     # Remove any previous value from either GRUB command-line variable.
     sed -i -E '/^GRUB_CMDLINE_LINUX(_DEFAULT)?=/ {
-        s/[[:space:]]*snd_soc_sof_es8336\\.quirk=[^ "]+//g
+        s/[[:space:]]*snd_soc_sof_es8336\.quirk=[^ "]+//g
     }' /etc/default/grub
 
     if grep -q '^GRUB_CMDLINE_LINUX_DEFAULT=' /etc/default/grub; then
@@ -29,7 +29,7 @@ if grep -qi 'CP43IGL' /sys/class/dmi/id/product_name /sys/class/dmi/id/board_nam
         echo 'GRUB_CMDLINE_LINUX_DEFAULT="snd_soc_sof_es8336.quirk=66"' >> /etc/default/grub
     fi
 
-    if ! grep -q '^GRUB_CMDLINE_LINUX_DEFAULT=.*snd_soc_sof_es8336\\.quirk=66' /etc/default/grub; then
+    if ! grep -q '^GRUB_CMDLINE_LINUX_DEFAULT=.*snd_soc_sof_es8336\.quirk=66' /etc/default/grub; then
         echo "[grub] ERROR: Could not add the ES8336 quirk to GRUB defaults." >&2
         exit 1
     fi
